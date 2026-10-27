@@ -1,0 +1,31 @@
+COMMAND (Bash):
+# username is the injection payload: ' OR 1=1--
+curl -s -i -X POST http://127.0.0.1:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"'\'' OR 1=1--","password":"whatever123"}'
+
+ACTUAL RESPONSE:
+HTTP/1.1 400 Bad Request
+Content-Security-Policy: default-src 'none';base-uri 'none';font-src 'self' https: data:;form-action 'none';frame-ancestors 'none';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-site
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+X-Request-Id: 5a9d532b-b770-4187-84a4-2917a3fbd7f8
+Cache-Control: no-store
+RateLimit-Policy: 20;w=900
+RateLimit: limit=20, remaining=17, reset=899
+Content-Type: application/json; charset=utf-8
+Content-Length: 96
+ETag: W/"60-vF4PnUWmeJDmiOgCqaewFtivVJ8"
+Date: Mon, 26 Oct 2026 04:12:41 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"error":"validation_failed","details":[{"field":"username","message":"has an invalid format"}]}

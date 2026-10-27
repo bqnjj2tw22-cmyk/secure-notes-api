@@ -1,0 +1,128 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ---------------------------------------------------------------- unit tests
+  test:
+    name: Tests (node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['22']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Unit and API tests
+        run: npm test
+
+  # ------------------------------------------------------------------- SAST
+  sast:
+    name: SAST (Semgrep + ESLint security)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+
+      - name: ESLint security rules -> SARIF
+        run: npx eslint . --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif
+
+      - name: Upload ESLint SARIF to code scanning
+        if: always()
+        continue-on-error: true
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: eslint-results.sarif
+          category: eslint
+
+      - name: Semgrep (OWASP Top Ten ruleset)
+        run: |
+          docker run --rm -v "$PWD:/src" -w /src returntocorp/semgrep:latest \
+            semgrep scan --config p/owasp-top-ten --config p/nodejs \
+            --severity=ERROR --sarif --output semgrep.sarif --error
+
+      - name: Upload Semgrep SARIF to code scanning
+        if: always()
+        continue-on-error: true
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: semgrep.sarif
+          category: semgrep
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sast-reports
+          path: |
+            eslint-results.sarif
+            semgrep.sarif
+
+  # -------------------------------------------------------------------- SCA
+  sca:
+    name: SCA (npm audit + dependency review)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+
+      - name: npm audit (fail on high or critical)
+        run: npm audit --audit-level=high
+
+      - name: Produce machine-readable audit report
+        if: always()
+        run: npm audit --json > npm-audit.json || true
+
+      - name: Dependency review (pull requests only)
+        if: github.event_name == 'pull_request'
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sca-reports
+          path: npm-audit.json
+
+  # ----------------------------------------------------------------- CodeQL
+  codeql:
+    name: CodeQL
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+          queries: security-extended
+      - uses: github/codeql-action/autobuild@v3
+      - uses: github/codeql-action/analyze@v3
+        with:
+          category: '/language:javascript-typescript'

@@ -1,0 +1,6 @@
+COMMAND (Bash):
+# payload section of the issued token, base64url-decoded
+# header: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+ACTUAL RESPONSE:
+{"sub":"1","username":"alice","role":"user","iat":1792987960,"exp":1792988860,"aud":"secure-notes-client","iss":"secure-notes-api","jti":"6885301f-6530-4afc-8980-e257b45408cf"}

@@ -1,0 +1,176 @@
+{
+  "version": "2.1.0",
+  "$schema": "http://json.schemastore.org/sarif-2.1.0-rtm.5",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "ESLint",
+          "informationUri": "https://eslint.org",
+          "rules": [
+            {
+              "id": "security/detect-non-literal-fs-filename",
+              "helpUri": "https://github.com/eslint-community/eslint-plugin-security/blob/main/docs/rules/detect-non-literal-fs-filename.md",
+              "properties": {
+                "category": "Possible Security Vulnerability"
+              },
+              "shortDescription": {
+                "text": "Detects variable in filename argument of \"fs\" calls, which might allow an attacker to access anything on your system."
+              }
+            },
+            {
+              "id": "security/detect-object-injection",
+              "helpUri": "https://github.com/eslint-community/eslint-plugin-security/blob/main/docs/rules/detect-object-injection.md",
+              "properties": {
+                "category": "Possible Security Vulnerability"
+              },
+              "shortDescription": {
+                "text": "Detects \"variable[key]\" as a left- or right-hand assignment operand."
+              }
+            }
+          ],
+          "version": "9.39.5"
+        }
+      },
+      "artifacts": [
+        {
+          "location": {
+            "uri": "file:///C:/Users/Xiao/Documents/deepseek-harness/default-workspace/labs/lab1-secure-api/eslint.config.js"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Users/Xiao/Documents/deepseek-harness/default-workspace/labs/lab1-secure-api/src/app.js"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Users/Xiao/Documents/deepseek-harness/default-workspace/labs/lab1-secure-api/src/config.js"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Users/Xiao/Documents/deepseek-harness/default-workspace/labs/lab1-secure-api/src/db.js"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Users/Xiao/Documents/deepseek-harness/default-workspace/labs/lab1-secure-api/src/middleware/auth.js"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Users/Xiao/Documents/deepseek-harness/default-workspace/labs/lab1-secure-api/src/middleware/validate.js"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Users/Xiao/Documents/deepseek-harness/default-workspace/labs/lab1-secure-api/src/routes/auth.js"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Users/Xiao/Documents/deepseek-harness/default-workspace/labs/lab1-secure-api/src/routes/data.js"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Users/Xiao/Documents/deepseek-harness/default-workspace/labs/lab1-secure-api/src/security/passwords.js"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Users/Xiao/Documents/deepseek-harness/default-workspace/labs/lab1-secure-api/src/security/sanitize.js"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Users/Xiao/Documents/deepseek-harness/default-workspace/labs/lab1-secure-api/src/security/tokens.js"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Users/Xiao/Documents/deepseek-harness/default-workspace/labs/lab1-secure-api/src/seed-data.js"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Users/Xiao/Documents/deepseek-harness/default-workspace/labs/lab1-secure-api/src/seed.js"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Users/Xiao/Documents/deepseek-harness/default-workspace/labs/lab1-secure-api/src/server.js"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Users/Xiao/Documents/deepseek-harness/default-workspace/labs/lab1-secure-api/test/api.test.js"
+          }
+        }
+      ],
+      "results": [
+        {
+          "level": "warning",
+          "message": {
+            "text": "Found mkdirSync from package \"node:fs\" with non literal argument at index 0"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///C:/Users/Xiao/Documents/deepseek-harness/default-workspace/labs/lab1-secure-api/src/db.js",
+                  "index": 3
+                },
+                "region": {
+                  "startLine": 24,
+                  "startColumn": 5,
+                  "endLine": 24,
+                  "endColumn": 60
+                }
+              }
+            }
+          ],
+          "ruleId": "security/detect-non-literal-fs-filename",
+          "ruleIndex": 0,
+          "suppressions": [
+            {
+              "kind": "inSource",
+              "justification": ""
+            }
+          ]
+        },
+        {
+          "level": "warning",
+          "message": {
+            "text": "Variable Assigned to Object Injection Sink"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///C:/Users/Xiao/Documents/deepseek-harness/default-workspace/labs/lab1-secure-api/src/middleware/validate.js",
+                  "index": 5
+                },
+                "region": {
+                  "startLine": 35,
+                  "startColumn": 15,
+                  "endLine": 35,
+                  "endColumn": 26
+                }
+              }
+            }
+          ],
+          "ruleId": "security/detect-object-injection",
+          "ruleIndex": 1,
+          "suppressions": [
+            {
+              "kind": "inSource",
+              "justification": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

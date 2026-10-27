@@ -1,0 +1,25 @@
+COMMAND (Bash):
+curl -s -D - -o /dev/null http://127.0.0.1:3000/health
+
+ACTUAL RESPONSE:
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'none';base-uri 'none';font-src 'self' https: data:;form-action 'none';frame-ancestors 'none';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-site
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+X-Request-Id: d88d49cb-28de-405d-960a-a34e79864418
+Cache-Control: no-store
+Content-Type: application/json; charset=utf-8
+Content-Length: 26
+ETag: W/"1a-VRypKQsyDkVec5OPIPtP4J+8pNo"
+Date: Mon, 26 Oct 2026 04:12:41 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+

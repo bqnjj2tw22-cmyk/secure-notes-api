@@ -1,0 +1,7 @@
+COMMAND (Bash):
+curl -s -X POST http://127.0.0.1:3000/api/posts \
+  -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+  -d '{"title":"xss-demo","content":"<script>alert(document.cookie)</script>"}'
+
+ACTUAL RESPONSE:
+{"id":4,"title":"xss-demo","content":"&lt;script&gt;alert(document.cookie)&lt;&#x2F;script&gt;","author":"alice"}

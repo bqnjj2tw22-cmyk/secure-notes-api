@@ -1,0 +1,7 @@
+COMMAND (Bash):
+curl -s -X POST http://127.0.0.1:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"alice","password":"Alice-Str0ng!Pass"}'
+
+ACTUAL RESPONSE:
+{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJhbGljZSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzkyOTg3OTYwLCJleHAiOjE3OTI5ODg4NjAsImF1ZCI6InNlY3VyZS1ub3Rlcy1jbGllbnQiLCJpc3MiOiJzZWN1cmUtbm90ZXMtYXBpIiwianRpIjoiNjg4NTMwMWYtNjUzMC00YWZjLTg5ODAtZTI1N2I0NTQwOGNmIn0.86vNfFnhny6I3y5fNZYspwk6xgQLpax_19T6gMha9s0","token_type":"Bearer","expires_in":"15m","user":{"id":1,"username":"alice","role":"user"}}
