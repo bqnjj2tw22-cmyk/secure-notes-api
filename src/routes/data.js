@@ -3,10 +3,15 @@
 const express = require('express');
 const { queries } = require('../db');
 const { requireAuth, requireRole } = require('../middleware/auth');
+const { apiLimiter } = require('../middleware/limits');
 const { validate, postSchema } = require('../middleware/validate');
 const { normaliseText } = require('../security/sanitize');
 
 const router = express.Router();
+
+// Baseline flood protection for every route in this router. The login endpoint has
+// its own, much tighter budget in middleware/limits.js.
+router.use(apiLimiter);
 
 /** GET /api/me - who am I (identity taken from the verified token only). */
 router.get('/me', requireAuth, (req, res) => {

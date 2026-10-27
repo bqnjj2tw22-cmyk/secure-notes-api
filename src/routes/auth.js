@@ -1,24 +1,15 @@
 'use strict';
 
 const express = require('express');
-const rateLimit = require('express-rate-limit');
 const config = require('../config');
 const { queries } = require('../db');
+const { loginLimiter } = require('../middleware/limits');
 const { validate, loginSchema } = require('../middleware/validate');
 const { verifyPassword, burnTimingBudget } = require('../security/passwords');
 const { issueToken } = require('../security/tokens');
 const { normaliseText } = require('../security/sanitize');
 
 const router = express.Router();
-
-/** Brute-force brake #1: per-IP rate limit on the login endpoint. */
-const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  limit: 20,
-  standardHeaders: 'draft-7',
-  legacyHeaders: false,
-  message: { error: 'too_many_requests' }
-});
 
 /** Brute-force brake #2: per-account lock after N consecutive failures. */
 const MAX_FAILURES = 5;
