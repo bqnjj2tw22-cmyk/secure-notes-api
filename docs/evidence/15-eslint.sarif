@@ -17,16 +17,6 @@
               "shortDescription": {
                 "text": "Detects variable in filename argument of \"fs\" calls, which might allow an attacker to access anything on your system."
               }
-            },
-            {
-              "id": "security/detect-object-injection",
-              "helpUri": "https://github.com/eslint-community/eslint-plugin-security/blob/main/docs/rules/detect-object-injection.md",
-              "properties": {
-                "category": "Possible Security Vulnerability"
-              },
-              "shortDescription": {
-                "text": "Detects \"variable[key]\" as a left- or right-hand assignment operand."
-              }
             }
           ],
           "version": "9.39.5"
@@ -56,6 +46,11 @@
         {
           "location": {
             "uri": "file:///C:/Users/Xiao/Documents/deepseek-harness/default-workspace/labs/lab1-secure-api/src/middleware/auth.js"
+          }
+        },
+        {
+          "location": {
+            "uri": "file:///C:/Users/Xiao/Documents/deepseek-harness/default-workspace/labs/lab1-secure-api/src/middleware/limits.js"
           }
         },
         {
@@ -133,36 +128,6 @@
           ],
           "ruleId": "security/detect-non-literal-fs-filename",
           "ruleIndex": 0,
-          "suppressions": [
-            {
-              "kind": "inSource",
-              "justification": ""
-            }
-          ]
-        },
-        {
-          "level": "warning",
-          "message": {
-            "text": "Variable Assigned to Object Injection Sink"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "file:///C:/Users/Xiao/Documents/deepseek-harness/default-workspace/labs/lab1-secure-api/src/middleware/validate.js",
-                  "index": 5
-                },
-                "region": {
-                  "startLine": 35,
-                  "startColumn": 15,
-                  "endLine": 35,
-                  "endColumn": 26
-                }
-              }
-            }
-          ],
-          "ruleId": "security/detect-object-injection",
-          "ruleIndex": 1,
           "suppressions": [
             {
               "kind": "inSource",

@@ -28,12 +28,15 @@ function assertAllowedKeys(body, allowed) {
   }
 }
 
-function requireString(body, field, { min = 1, max = 255, pattern = null } = {}) {
-  // `field` is always a literal supplied by the schema in this file, never a
-  // value taken from the request.
-  // eslint-disable-next-line security/detect-object-injection
-  const raw = body[field];
-
+/**
+ * Validate one string field.
+ *
+ * The value is passed in directly (`body.username`) instead of being looked up by
+ * a computed key, so there is no dynamic property access on request data anywhere
+ * in the validator - the same reason ESLint's `security/detect-object-injection`
+ * exists.
+ */
+function requireString(raw, field, { min = 1, max = 255, pattern = null } = {}) {
   if (typeof raw !== 'string') {
     throw new ValidationError([{ field, message: 'must be a string' }]);
   }
@@ -66,16 +69,16 @@ const USERNAME_PATTERN = /^[A-Za-z0-9._-]+$/;
 const loginSchema = (body) => {
   assertAllowedKeys(body, ['username', 'password']);
   return {
-    username: requireString(body, 'username', { min: 3, max: 32, pattern: USERNAME_PATTERN }),
-    password: requireString(body, 'password', { min: 8, max: 72 })
+    username: requireString(body.username, 'username', { min: 3, max: 32, pattern: USERNAME_PATTERN }),
+    password: requireString(body.password, 'password', { min: 8, max: 72 })
   };
 };
 
 const postSchema = (body) => {
   assertAllowedKeys(body, ['title', 'content']);
   return {
-    title: requireString(body, 'title', { min: 1, max: 120 }),
-    content: requireString(body, 'content', { min: 1, max: 5000 })
+    title: requireString(body.title, 'title', { min: 1, max: 120 }),
+    content: requireString(body.content, 'content', { min: 1, max: 5000 })
   };
 };
 
