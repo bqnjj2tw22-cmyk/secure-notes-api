@@ -15,14 +15,13 @@ number, so the numbering below must be kept.
 | `cve-fixed-proof.png` | terminal: `HTTP/1.1 400 Bad Request` + `traversal attempt blocked`, then `200` for `/` and `/index.php` | Figure 9 |
 | `api-curl.png` | optional: Postman/terminal showing login + authenticated `GET /api/data` | Figure 2 |
 
-How to produce the CI screenshots:
+How to produce the CI screenshots (the repository is already published):
 
-1. Create an empty public repository `secure-notes-api` on GitHub.
-2. `git init && git add . && git commit -m "secure notes api" && git branch -M main`
-3. `git remote add origin https://github.com/USERNAME/secure-notes-api.git && git push -u origin main`
-4. Open **Actions → CI**, wait for all five jobs, screenshot the summary page.
-5. Open the `SAST` and `SCA` jobs, screenshot the last 15 lines of the log.
-6. Open **Security → Code scanning**, screenshot the (empty) alert list.
+1. Open <https://github.com/bqnjj2tw22-cmyk/secure-notes-api/actions>.
+2. Open the newest **CI** run, wait for all jobs, screenshot the run summary.
+3. Open the `SAST` job and the `SCA` job, screenshot the last ~15 log lines of each.
+4. Open <https://github.com/bqnjj2tw22-cmyk/secure-notes-api/security/code-scanning>,
+   screenshot the alert list.
 
 Do not screenshot secrets: the `JWT_SECRET` in `.env` is local only and `.env` is
 git-ignored.

@@ -2,10 +2,9 @@
 
 **Secure REST API with CI/CD security scanning and real-CVE analysis (CVE-2018-7490)**
 
-[![CI](https://github.com/USERNAME/secure-notes-api/actions/workflows/ci.yml/badge.svg)](https://github.com/USERNAME/secure-notes-api/actions/workflows/ci.yml)
+[![CI](https://github.com/bqnjj2tw22-cmyk/secure-notes-api/actions/workflows/ci.yml/badge.svg)](https://github.com/bqnjj2tw22-cmyk/secure-notes-api/actions/workflows/ci.yml)
 
-> Replace `USERNAME` with your GitHub account after pushing, and put the repository
-> URL into the report cover sheet.
+**Repository:** <https://github.com/bqnjj2tw22-cmyk/secure-notes-api>
 
 | Item | Value |
 | --- | --- |
