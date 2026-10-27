@@ -1,0 +1,2 @@
+# Keeps the default database directory in the repository.
+# SQLite files themselves are ignored (see ../.gitignore).

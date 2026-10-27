@@ -7,9 +7,12 @@
  * native build step.  Every statement that touches user input is a *prepared
  * statement with bound parameters* - string concatenation is never used to build
  * SQL, which is the primary defence against SQL injection.
+ *
+ * The module never touches the file system directly: `data/` is part of the
+ * repository (kept by `data/.gitkeep`) and a deployment that points `DB_PATH`
+ * somewhere else is responsible for that directory, exactly like it is for a
+ * PostgreSQL data directory.  No dynamic path ever reaches an `fs` call.
  */
-const fs = require('node:fs');
-const path = require('node:path');
 const { DatabaseSync } = require('node:sqlite');
 
 let db;
@@ -18,13 +21,18 @@ let db;
  * @param {string} dbPath  File path, or ':memory:' for tests.
  */
 function init(dbPath) {
-  if (dbPath !== ':memory:') {
-    // The directory comes from validated configuration, not from user input.
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    fs.mkdirSync(path.dirname(dbPath), { recursive: true });
+  try {
+    db = new DatabaseSync(dbPath);
+  } catch (err) {
+    // Turn SQLite's terse "unable to open database file" into an actionable error.
+    if (dbPath !== ':memory:' && /unable to open/i.test(String(err && err.message))) {
+      throw new Error(
+        `Cannot open the database at "${dbPath}". Create its directory first ` +
+          '(the default ./data is part of the repository) or point DB_PATH at an existing directory.'
+      );
+    }
+    throw err;
   }
-
-  db = new DatabaseSync(dbPath);
 
   // Defence in depth: even if an injection attempt ever got through, SQLite's
   // foreign keys and strict typing limit the damage.

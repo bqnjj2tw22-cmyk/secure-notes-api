@@ -7,18 +7,7 @@
         "driver": {
           "name": "ESLint",
           "informationUri": "https://eslint.org",
-          "rules": [
-            {
-              "id": "security/detect-non-literal-fs-filename",
-              "helpUri": "https://github.com/eslint-community/eslint-plugin-security/blob/main/docs/rules/detect-non-literal-fs-filename.md",
-              "properties": {
-                "category": "Possible Security Vulnerability"
-              },
-              "shortDescription": {
-                "text": "Detects variable in filename argument of \"fs\" calls, which might allow an attacker to access anything on your system."
-              }
-            }
-          ],
+          "rules": [],
           "version": "9.39.5"
         }
       },
@@ -104,38 +93,7 @@
           }
         }
       ],
-      "results": [
-        {
-          "level": "warning",
-          "message": {
-            "text": "Found mkdirSync from package \"node:fs\" with non literal argument at index 0"
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "file:///C:/Users/Xiao/Documents/deepseek-harness/default-workspace/labs/lab1-secure-api/src/db.js",
-                  "index": 3
-                },
-                "region": {
-                  "startLine": 24,
-                  "startColumn": 5,
-                  "endLine": 24,
-                  "endColumn": 60
-                }
-              }
-            }
-          ],
-          "ruleId": "security/detect-non-literal-fs-filename",
-          "ruleIndex": 0,
-          "suppressions": [
-            {
-              "kind": "inSource",
-              "justification": ""
-            }
-          ]
-        }
-      ]
+      "results": []
     }
   ]
 }

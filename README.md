@@ -185,9 +185,11 @@ the raw string must unescape it, while a careless client that injects the value 
 3. **JWT verification** — `requireAuth` middleware verifies signature, algorithm
    (pinned to HS256, so `alg: none` and RS→HS confusion are rejected), issuer,
    audience and expiry; identity is taken only from the verified claims.
-4. **Brute-force resistance** — two independent brakes: an IP rate limiter on the
-   login route (20 requests / 15 min) and a per-account lock after 5 consecutive
-   failures within 15 minutes, recorded in `login_attempts`.
+4. **Brute-force and flood resistance** — three independent brakes, all defined in
+   `src/middleware/limits.js`: a tight IP rate limiter on the login route
+   (20 requests / 15 min), a baseline limiter on every other `/api` route
+   (300 requests / 15 min), and a per-account lock after 5 consecutive failures
+   within 15 minutes, recorded in `login_attempts`.
 5. **Enumeration resistance** — identical body (`invalid_credentials`) and
    near-identical timing for "unknown user" and "wrong password": an unknown user is
    compared against a fixed dummy bcrypt hash (`burnTimingBudget`) so the response
@@ -276,15 +278,22 @@ found 0 vulnerabilities
 **0** vulnerabilities of any severity; `docs/evidence/13-eslint-sast.json` records
 `errorCount: 0`, `warningCount: 0` for every file.
 
+In the published repository the same three jobs finish green and
+**Security → Code scanning reports 0 open alerts**: the SARIF upload is empty
+because the ESLint security ruleset no longer produces findings (the last one,
+`security/detect-non-literal-fs-filename`, disappeared when the data-access layer
+stopped calling `fs` with a configured path), and the Semgrep run scans only the
+application, not the intentionally vulnerable CVE lab material.
+
 ### 3.2 Screenshots to attach
 
 GitHub Actions must be shown, not described. Capture (see
 `docs/screenshots/README.md` for the exact list):
 
-1. the green CI run with all five jobs;
-2. the Semgrep job log showing `0 findings`;
-3. the `npm audit` step output (`found 0 vulnerabilities`);
-4. the **Security → Code scanning** page with no open alerts.
+1. the green CI run with all four jobs (`Tests`, `SAST`, `SCA`, `CodeQL`);
+2. the Semgrep job log (`0 findings`) and the `npm audit` step
+   (`found 0 vulnerabilities`);
+3. the **Security → Code scanning** page with no open alerts.
 
 ---
 

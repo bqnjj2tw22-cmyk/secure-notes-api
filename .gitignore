@@ -1,5 +1,7 @@
 node_modules/
-data/
+# database files are local state; the directory itself is kept by data/.gitkeep
+data/*
+!data/.gitkeep
 reports/
 .env
 .env.*
