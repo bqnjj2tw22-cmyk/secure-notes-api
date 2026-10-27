@@ -250,6 +250,13 @@ HTTP/1.1 404 Not Found
 SARIF reports are uploaded to **Security → Code scanning**, and both raw reports are
 attached to the run as artefacts (`sast-reports`, `sca-reports`).
 
+One path is deliberately excluded from Semgrep: `docs/cve-2018-7490/` contains the
+*vulnerable* uWSGI environment used for the CVE study (including a `phpinfo()` page
+that proves the PHP plugin works). Scanning it as production code would report the
+vulnerability under study as a defect of this repository. The exclusion and its
+reason are recorded in `.semgrepignore`; the application under test (`src/`, `test/`,
+CI configuration) is scanned in full.
+
 ### 3.1 Local results (same commands, same config)
 
 ```

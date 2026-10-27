@@ -1,0 +1,8 @@
+# Files excluded from Semgrep.
+#
+# `docs/cve-2018-7490/` is the deliberately vulnerable reproduction environment for
+# the CVE study (a uWSGI 2.0.16 container plus a phpinfo page that proves the PHP
+# plugin still works). Scanning it as if it were production code would report the
+# vulnerability we are studying as if it were a defect in this repository.
+# The application under test is `src/`, `test/` and the CI configuration only.
+docs/cve-2018-7490/
