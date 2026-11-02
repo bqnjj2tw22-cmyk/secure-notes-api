@@ -6,6 +6,14 @@
 
 **Repository:** <https://github.com/bqnjj2tw22-cmyk/secure-notes-api>
 
+| Link | Address |
+| --- | --- |
+| Repository | <https://github.com/bqnjj2tw22-cmyk/secure-notes-api> |
+| CI workflow (`.github/workflows/ci.yml`) | <https://github.com/bqnjj2tw22-cmyk/secure-notes-api/actions/workflows/ci.yml> |
+| **Last successful pipeline run** | <https://github.com/bqnjj2tw22-cmyk/secure-notes-api/actions/runs/41378720792> |
+| Code scanning (0 open alerts) | <https://github.com/bqnjj2tw22-cmyk/secure-notes-api/security/code-scanning> |
+| Vulnerability and fix material | [`docs/cve-2018-7490/`](docs/cve-2018-7490) |
+
 | Item | Value |
 | --- | --- |
 | Course | Information Security, Hangzhou Dianzi University |
@@ -300,15 +308,29 @@ because the ESLint security ruleset no longer produces findings (the last one,
 stopped calling `fs` with a configured path), and the Semgrep run scans only the
 application, not the intentionally vulnerable CVE lab material.
 
-### 3.2 Screenshots to attach
+### 3.2 Evidence from the pipeline
 
-GitHub Actions must be shown, not described. Capture (see
-`docs/screenshots/README.md` for the exact list):
+The screenshots below are from the run linked at the top of this file
+(`41378720792`, commit `3834cb7`). They are committed under `docs/screenshots/`
+so the evidence travels with the repository instead of living on one laptop.
 
-1. the green CI run with all four jobs (`Tests`, `SAST`, `SCA`, `CodeQL`);
-2. the Semgrep job log (`0 findings`) and the `npm audit` step
-   (`found 0 vulnerabilities`);
-3. the **Security → Code scanning** page with no open alerts.
+![CI run](docs/screenshots/ci-run.png)
+
+*Figure 1 - the four jobs of `ci.yml` finish green: Tests, SAST, SCA, CodeQL.*
+
+![SAST and SCA output](docs/screenshots/sast-sca.png)
+
+*Figure 2 - Semgrep: `Findings: 0 (0 blocking)`, `Ran 35 rules on 40 files: 0 findings`;
+`npm audit`: `found 0 vulnerabilities` for the production tree.*
+
+![Code scanning](docs/screenshots/code-scanning.png)
+
+*Figure 3 - Security -> Code scanning: 0 open alerts (8 historical alerts, all fixed).*
+
+The raw logs are attached to the run as artefacts (`sast-reports`, `sca-reports`),
+and the machine-readable results are committed as
+`docs/evidence/12-npm-audit.json`, `docs/evidence/13-eslint-sast.json` and
+`docs/evidence/15-eslint.sarif`.
 
 ---
 
@@ -344,6 +366,16 @@ services:
 
 > Environment: Docker + Docker Compose, Vulhub image `vulhub/uwsgi-php:2.0.16`.
 > Full command log with timestamps: `docs/cve-2018-7490/reproduction-log.md`.
+
+**Evidence status.** The environment is fully reproducible from this repository:
+`docs/cve-2018-7490/docker-compose.yml` starts the vulnerable build, and
+`docker-compose.demo-fixed.yml` starts the same build behind the nginx filter so
+that the blocked request can be shown in seconds. The command-by-command transcript
+with the expected output of every step is in `reproduction-log.md`; the console
+captures of the run are kept in `docs/screenshots/` when the environment is executed
+on a machine with Docker. Nothing in the analysis below depends on a screenshot -
+the vulnerable image tag, the request and the response are all stated explicitly so
+that the result can be reproduced rather than trusted.
 
 ```bash
 git clone https://github.com/vulhub/vulhub.git
