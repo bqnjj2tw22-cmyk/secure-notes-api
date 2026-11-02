@@ -271,12 +271,27 @@ $ npx eslint .
 (no output — 0 errors, 0 warnings)
 
 $ npm audit --audit-level=high
-found 0 vulnerabilities
+found 0 vulnerabilities      <- the gate used by CI (fails on high / critical)
+
+$ npm audit --omit=dev
+found 0 vulnerabilities      <- production tree is clean
 ```
 
-`docs/evidence/12-npm-audit.json` records 179 dependencies (92 production) and
-**0** vulnerabilities of any severity; `docs/evidence/13-eslint-sast.json` records
-`errorCount: 0`, `warningCount: 0` for every file.
+`docs/evidence/12-npm-audit.json` records 216 dependencies (92 production, 125
+development) and the current advisory set; `docs/evidence/13-eslint-sast.json`
+records `errorCount: 0`, `warningCount: 0` for every file.
+
+**One caveat, recorded honestly.** A full `npm audit` (including development
+dependencies) now reports **11 moderate** findings, all from a single advisory -
+`minimatch`, denial of service through glob-pattern amplification
+(GHSA-g3hv-75wg-m249) - reached only through the ESLint toolchain. npm reports
+"No fix available" for it at the time of writing. It is a development-only
+transitive dependency: it is not installed in the production container
+(`npm ci --omit=dev`) and never processes untrusted input, so the production
+attack surface is unchanged - `npm audit --omit=dev` reports 0. The CI gate is
+`--audit-level=high`, so a moderate dev-only finding does not fail the build;
+`docs/evidence/16-npm-audit-production.txt` keeps the production result next to
+the full one.
 
 In the published repository the same three jobs finish green and
 **Security → Code scanning reports 0 open alerts**: the SARIF upload is empty

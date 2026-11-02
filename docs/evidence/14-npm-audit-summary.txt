@@ -1,0 +1,57 @@
+# npm audit report
+
+minimatch  
+Severity: moderate
+minimatch has potential denial of service via globparts amplification - https://github.com/advisories/GHSA-g3hv-75wg-m249
+No fix available
+node_modules/minimatch
+  @eslint/config-array  
+  Depends on vulnerable versions of minimatch
+  node_modules/@eslint/config-array
+  @eslint/eslintrc  
+  Depends on vulnerable versions of minimatch
+  node_modules/@eslint/eslintrc
+  node_modules/@microsoft/eslint-formatter-sarif/node_modules/@eslint/eslintrc
+  @humanwhocodes/config-array  
+  Depends on vulnerable versions of minimatch
+  node_modules/@humanwhocodes/config-array
+  eslint  
+  Depends on vulnerable versions of @eslint-community/eslint-utils
+  Depends on vulnerable versions of @eslint/config-array
+  Depends on vulnerable versions of @eslint/eslintrc
+  Depends on vulnerable versions of @humanwhocodes/config-array
+  Depends on vulnerable versions of file-entry-cache
+  Depends on vulnerable versions of minimatch
+  node_modules/@microsoft/eslint-formatter-sarif/node_modules/eslint
+  node_modules/eslint
+    @eslint-community/eslint-utils  
+    Depends on vulnerable versions of eslint
+    node_modules/@eslint-community/eslint-utils
+    @microsoft/eslint-formatter-sarif  
+    Depends on vulnerable versions of eslint
+    node_modules/@microsoft/eslint-formatter-sarif
+  glob  
+  Depends on vulnerable versions of minimatch
+  node_modules/glob
+    rimraf  
+    Depends on vulnerable versions of glob
+    node_modules/rimraf
+      flat-cache  
+      Depends on vulnerable versions of rimraf
+      node_modules/@microsoft/eslint-formatter-sarif/node_modules/flat-cache
+        file-entry-cache  
+        Depends on vulnerable versions of flat-cache
+        node_modules/@microsoft/eslint-formatter-sarif/node_modules/file-entry-cache
+
+11 moderate severity vulnerabilities
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+Some issues need review, and may require choosing
+a different dependency.
+npm notice
+npm notice New major version of npm available! 10.9.2 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
