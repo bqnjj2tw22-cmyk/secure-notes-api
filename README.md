@@ -10,7 +10,8 @@
 | --- | --- |
 | Repository | <https://github.com/bqnjj2tw22-cmyk/secure-notes-api> |
 | CI workflow (`.github/workflows/ci.yml`) | <https://github.com/bqnjj2tw22-cmyk/secure-notes-api/actions/workflows/ci.yml> |
-| **Last successful pipeline run** | <https://github.com/bqnjj2tw22-cmyk/secure-notes-api/actions/runs/41378720792> |
+| **Pipeline runs (latest first)** | <https://github.com/bqnjj2tw22-cmyk/secure-notes-api/actions/workflows/ci.yml> |
+| Example successful run | <https://github.com/bqnjj2tw22-cmyk/secure-notes-api/actions/runs/41379752506> |
 | Code scanning (0 open alerts) | <https://github.com/bqnjj2tw22-cmyk/secure-notes-api/security/code-scanning> |
 | Vulnerability and fix material | [`docs/cve-2018-7490/`](docs/cve-2018-7490) |
 
@@ -311,7 +312,7 @@ application, not the intentionally vulnerable CVE lab material.
 ### 3.2 Evidence from the pipeline
 
 The screenshots below are from the run linked at the top of this file
-(`41378720792`, commit `3834cb7`). They are committed under `docs/screenshots/`
+(`41379752506`, commit `5e25b65`). They are committed under `docs/screenshots/`
 so the evidence travels with the repository instead of living on one laptop.
 
 ![CI run](docs/screenshots/ci-run.png)
